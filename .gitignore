@@ -1,0 +1,98 @@
+## Build results
+bin/
+obj/
+out/
+TestResults/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## OS generated files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+## VS Code settings
+.vscode/
+
+## Rider
+.idea/
+*.sln.iml
+
+## ASP.NET publish artifacts
+wwwroot/dist/
+publish/
+app.publish/
+
+## Logs
+*.log
+logs/
+
+## npm / yarn
+node_modules/
+package-lock.json
+yarn.lock
+
+## dotnet tools
+.tools/
+
+## Configuration
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+*.pfx
+*.key
+*.crt
+
+## User secrets (if not checked in)
+secrets.json
+
+## Docker artifacts
+*.pid
+docker-compose.override.yml
+docker-compose.vs.debug.g.yml
+docker-compose.vs.release.g.yml
+
+## Backup & temp
+*.bak
+*.tmp
+*.temp
+*.old
+
+## ReSharper
+_ReSharper*/
+*.DotSettings.user
+
+## JetBrains Rider
+.idea/
+
+## VS Test
+*.coverage
+*.coveragexml
+*.vsp
+*.vspx
+*.vspscc
+.vs/
+
+## Global .NET artifacts
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## Entity Framework
+Migrations/*Snapshot.cs
+
+## Mac .NET artifacts
+*.DS_Store
+
+## Git
+.git/
+
+## Environment
+.env
+.env.*
