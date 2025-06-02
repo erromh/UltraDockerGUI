@@ -25,22 +25,36 @@
 
     <div class="container-fluid mb-5">
         <h2>Containers information</h2>
-        <div class="row">
+        
+        @* <div class="row">
             <div class="col-md-10">
                 <div class="card">
                     <div class="card-body">
-                        <pre id="dockerPsOutput" class="text-monospace"></pre>
+                        <pre id="   " class="text-monospace"></pre>
                     </div>
                 </div>
+            </div> *@
+        
+            <div>
+                @if (ViewBag.DockerTable != null)
+                {
+                    @Html.Raw(ViewBag.DockerTable)
+                }
             </div>
 
-            <!-- Кнопки справа -->
-            <div class="col-md-2 d-flex flex-column gap-2">
-                <button type="button" class="btn btn-secondary"> Show all containers &nbsp;</button>
-                <button type="button" class="btn btn-secondary">Reboot container &nbsp;</button>
-                <button type="button" class="btn btn-secondary">See logs &nbsp;</button>
-                <button type="button" class="btn btn-secondary">Download logs &nbsp;</button>
-            </div>
+            <div style="display: flex; justify-content: right; align-items: right; height: 80vh;">
+                <div style="text-align: right;">
+
+                    <form asp-controller="Home" asp-action="ShowContainers" method="post">
+                        <button type="submit" class="btn btn-secondary w-100 mb-2">Show all containers</button>
+                    </form>                
+
+                    <button type="button" class="btn btn-secondary">Reboot container &nbsp;</button>
+                    <button type="button" class="btn btn-secondary">See logs &nbsp;</button>
+                    <button type="button" class="btn btn-secondary">Download logs &nbsp;</button>
+                 </div>
+           </div>
+
         </div>
     </div>
 
