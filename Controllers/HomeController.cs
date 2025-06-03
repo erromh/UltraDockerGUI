@@ -1,62 +1,31 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// DockerController.cs
+using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using System.Text.RegularExpressions;
 
 namespace UltraDockerGUI.Controllers
 {
-public class HomeController : Controller
+public class DockerController : Controller
 {
     public IActionResult Index()
     {
+        var output = GetDockerContainers();
+        ViewBag.Containers = output.Split('\n', StringSplitOptions.RemoveEmptyEntries);
         return View();
     }
 
-    public IActionResult ShowContainers()
+    private string GetDockerContainers()
     {
-        var output = RunDockerPs();
-        ViewBag.DockerTable = BuildHtmlTable(output);
-        return View("Index"); // Вернёт страницу Index.cshtml (в Layout подгрузится ViewBag)
-    }
-
-    private List<string> RunDockerPs()
-    {
-        var process =
-            new Process { StartInfo = new ProcessStartInfo { FileName = "docker", Arguments = "ps -a",
-                                                             RedirectStandardOutput = true, UseShellExecute = false,
-                                                             CreateNoWindow = true } };
-
-        var output = new List<string>();
+        var process = new Process() { StartInfo = new ProcessStartInfo {
+            FileName = "docker",
+            Arguments = "ps --format \"{{.ID}}\t{{.Image}}\t{{.Status}}\"",
+            RedirectStandardOutput = true,
+            UseShellExecute = false,
+            CreateNoWindow = true,
+        } };
         process.Start();
-        while (!process.StandardOutput.EndOfStream)
-        {
-            output.Add(process.StandardOutput.ReadLine() ?? "");
-        }
+        string output = process.StandardOutput.ReadToEnd();
         process.WaitForExit();
         return output;
-    }
-
-    private string BuildHtmlTable(List<string> lines)
-    {
-        if (lines.Count == 0)
-            return "<p>No containers found.</p>";
-
-        var headers = Regex.Split(lines[0].Trim(), @"\s{2,}");
-        var html = "<table class='table table-striped'><thead><tr>";
-        foreach (var h in headers)
-            html += $"<th>{h}</th>";
-        html += "</tr></thead><tbody>";
-
-        for (int i = 1; i < lines.Count; i++)
-        {
-            var cols = Regex.Split(lines[i].Trim(), @"\s{2,}");
-            html += "<tr>";
-            foreach (var c in cols)
-                html += $"<td>{c}</td>";
-            html += "</tr>";
-        }
-
-        html += "</tbody></table>";
-        return html;
     }
 }
 }

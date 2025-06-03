@@ -1,6 +1,31 @@
 ﻿@page
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Список контейнеров";
+    var containers = ViewBag.Containers as string[];
 }
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Image</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var container in containers)
+        {
+            var cols = container.Split('\t');
+            if (cols.Length == 3)
+            {
+                <tr>
+                    <td>@cols[0]</td>
+                    <td>@cols[1]</td>
+                    <td>@cols[2]</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
 
 
