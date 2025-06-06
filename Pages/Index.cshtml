@@ -4,28 +4,46 @@
     var containers = ViewBag.Containers as string[];
 }
 
-<table class="table table-bordered">
-    <thead>
+<h2 class="mt-4">Список контейнеров Docker</h2>
+
+<div class="d-flex justify-content-between align-items-center my-3">
+    <button id="loadContainersButton" class="btn btn-primary">Обновить список</button>
+</div>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
         <tr>
             <th>ID</th>
-            <th>Image</th>
-            <th>Status</th>
+            <th>Образ</th>
+            <th>Имя</th>
+            <th>Статус</th>
         </tr>
     </thead>
-    <tbody>
-        @foreach (var container in containers)
-        {
-            var cols = container.Split('\t');
-            if (cols.Length == 3)
-            {
-                <tr>
-                    <td>@cols[0]</td>
-                    <td>@cols[1]</td>
-                    <td>@cols[2]</td>
-                </tr>
-            }
-        }
+    <tbody id="dockerTableBody">
     </tbody>
 </table>
+
+<script>
+    async function loadContainers() {
+        const response = await fetch('/api/docker/ps');
+        const containers = await response.json();
+
+        const tableBody = document.getElementById("dockerTableBody");
+        tableBody.innerHTML = "";
+
+        containers.forEach(c => {
+            const row = `<tr>
+                <td>${c.ID}</td>
+                <td>${c.Image}</td>
+                <td>${c.Name}</td>
+                <td>${c.Status}</td>
+            </tr>`;
+            tableBody.innerHTML += row;
+        });
+    }
+
+    document.getElementById("loadContainersButton").addEventListener("click", loadContainers);
+</script>
+
 
 
