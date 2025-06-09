@@ -4,9 +4,8 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace UltraDockerGUI
+namespace UltraDockerGUI.Controllers
 {
-    [ApiController]
     public class DockerController : ControllerBase
     {
         [HttpGet("ps")]
@@ -38,7 +37,7 @@ namespace UltraDockerGUI
         private List<Dictionary<string, string>> ParseDockerPsOutput(string output)
         {
             var containers = new List<Dictionary<string, string>>();
-            var lines = output.Split('\n', System.StringSplitOptions.RemoveEmptyEntries);
+            var lines = output.Split('\n', StringSplitOptions.RemoveEmptyEntries);
 
             foreach (var line in lines)
             {

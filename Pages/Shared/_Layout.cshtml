@@ -24,7 +24,6 @@
     </header>
 
     <div class="container-fluid mb-5">
-        <h2>Containers information</h2>
         
         @* <div class="row">
             <div class="col-md-10">
@@ -41,20 +40,6 @@
                     @Html.Raw(ViewBag.DockerTable)
                 }
             </div>
-
-            <div style="display: flex; justify-content: right; align-items: right; height: 80vh;">
-                <div style="text-align: right;">
-
-                    <form asp-controller="Home" asp-action="ShowContainers" method="post">
-                        <button type="submit" class="btn btn-secondary w-100 mb-2">Show all containers</button>
-                    </form>                
-
-                    <button type="button" class="btn btn-secondary">Reboot container &nbsp;</button>
-                    <button type="button" class="btn btn-secondary">See logs &nbsp;</button>
-                    <button type="button" class="btn btn-secondary">Download logs &nbsp;</button>
-                 </div>
-           </div>
-
         </div>
     </div>
 

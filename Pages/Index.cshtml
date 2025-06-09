@@ -22,28 +22,27 @@
     <tbody id="dockerTableBody">
     </tbody>
 </table>
-
 <script>
-    async function loadContainers() {
-        const response = await fetch('/api/docker/ps');
-        const containers = await response.json();
+    document.addEventListener("DOMContentLoaded", function () {
+        async function loadContainers() {
+            const response = await fetch('/ps');
+            const containers = await response.json();
 
-        const tableBody = document.getElementById("dockerTableBody");
-        tableBody.innerHTML = "";
+            const tableBody = document.getElementById("dockerTableBody");
+            tableBody.innerHTML = "";
 
-        containers.forEach(c => {
-            const row = `<tr>
-                <td>${c.ID}</td>
-                <td>${c.Image}</td>
-                <td>${c.Name}</td>
-                <td>${c.Status}</td>
-            </tr>`;
-            tableBody.innerHTML += row;
-        });
-    }
+            containers.forEach(c => {
+                const row = `<tr>
+                                <td>${c.ID}</td>
+                                <td>${c.Image}</td>
+                                <td>${c.Name}</td>
+                                <td>${c.Status}</td>
+                            </tr>`;
+                tableBody.innerHTML += row;
+            });
+        }
 
-    document.getElementById("loadContainersButton").addEventListener("click", loadContainers);
+        document.getElementById("loadContainersButton").addEventListener("click", loadContainers);
+    });
 </script>
-
-
 
