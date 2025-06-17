@@ -1,30 +1,41 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using System.Linq;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
+using UltraDockerGUI.Controllers;
 
 namespace UltraDockerGUI.Controllers
 {
-    public class DockerController : ControllerBase
+public class DockerController : ControllerBase
+{
+    private readonly ILogger<DockerController> _logger;
+
+    [HttpGet("ps")]
+
+    public async Task<IActionResult> GetDockerContainers()
     {
-        [HttpGet("ps")]
-        public async Task<IActionResult> GetDockerContainers()
+        try
         {
             var result = await RunDockerPs();
-            return Ok(ParseDockerPsOutput(result));
+            var containers = Ok(ParseDockerPsOutput(result));
+            return Ok(containers);
         }
-
-        private async Task<string> RunDockerPs()
+        catch (Exception ex)
         {
-            var processStartInfo = new ProcessStartInfo
-            {
-                FileName = "docker",
-                Arguments = "ps --format \"{{.ID}}|{{.Image}}|{{.Names}}|{{.Status}}\"",
-                RedirectStandardOutput = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
+            _logger.LogError(ex, "Ошибка при получении контейнеров Docker");
+            return Problem("Не удалось получить список контейнеров. Убедитесь, что Docker установлен и доступен.");
+        }
+    }
+
+    private async Task<string> RunDockerPs()
+    {
+        try
+        {
+            var processStartInfo =
+                new ProcessStartInfo { FileName = "docker",
+                                       Arguments = "ps --format \"{{.ID}}|{{.Image}}|{{.Names}}|{{.Status}}\"",
+                                       RedirectStandardOutput = true, UseShellExecute = false, CreateNoWindow = true };
 
             using var process = new Process { StartInfo = processStartInfo };
             process.Start();
@@ -33,28 +44,29 @@ namespace UltraDockerGUI.Controllers
 
             return output;
         }
-
-        private List<Dictionary<string, string>> ParseDockerPsOutput(string output)
+        catch (Exception ex)
         {
-            var containers = new List<Dictionary<string, string>>();
-            var lines = output.Split('\n', StringSplitOptions.RemoveEmptyEntries);
-
-            foreach (var line in lines)
-            {
-                var parts = line.Split('|');
-                if (parts.Length >= 4)
-                {
-                    containers.Add(new Dictionary<string, string>
-                    {
-                        { "ID", parts[0] },
-                        { "Image", parts[1] },
-                        { "Name", parts[2] },
-                        { "Status", parts[3] }
-                    });
-                }
-            }
-
-            return containers;
+            throw new InvalidOperationException("Не удалось получить список контейнеров Docker", ex);
         }
     }
+
+    private List<Dictionary<string, string>> ParseDockerPsOutput(string output)
+    {
+        var containers = new List<Dictionary<string, string>>();
+        var lines = output.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+
+        foreach (var line in lines)
+        {
+            var parts = line.Split('|');
+            if (parts.Length >= 4)
+            {
+                containers.Add(new Dictionary<string, string> {
+                    { "ID", parts[0] }, { "Image", parts[1] }, { "Name", parts[2] }, { "Status", parts[3] }
+                });
+            }
+        }
+
+        return containers;
+    }
+}
 }
